@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary Accent Colors (Vibrant Indigo) */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+
+  /* Semantic Colors mapped to CSS variables for Light/Dark mode */
+  --color-background: var(--bg);
+  --color-foreground: var(--text-main);
+  --color-muted: var(--text-muted);
+  --color-card: var(--card-bg);
+  --color-border: var(--border-color);
+
+  /* Fonts perfect for reading */
+  --font-sans:
+    "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-serif:
+    "Merriweather", "Georgia", Cambria, "Times New Roman", Times, serif;
+}
+
+@layer base {
+  :root {
+    /* Light Mode */
+    --bg: #f8fafc; /* Slate 50 */
+    --text-main: #0f172a; /* Slate 900 */
+    --text-muted: #64748b; /* Slate 500 */
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0; /* Slate 200 */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      /* Dark Mode */
+      --bg: #020617; /* Slate 950 */
+      --text-main: #f8fafc; /* Slate 50 */
+      --text-muted: #94a3b8; /* Slate 400 */
+      --card-bg: #0f172a; /* Slate 900 */
+      --border-color: #1e293b; /* Slate 800 */
+    }
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Smooth transition when switching themes */
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-main);
+  }
+
+  /* Specific typography for blog posts to make them highly readable */
+  .prose {
+    font-family: var(--font-serif);
+    line-height: 1.75;
+    color: var(--text-main);
+  }
+}
