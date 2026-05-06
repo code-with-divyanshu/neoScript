@@ -2,6 +2,65 @@ const jwt = require("jsonwebtoken");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 
+const adminSignupController = async (req, res) => {
+  try {
+    const { name, email, password, termsAccepted } = req.body;
+
+    const existingEmail = await userModel.findOne({
+      email,
+    });
+
+    if (existingEmail) {
+      return res.status(409).json({
+        message: "This email is already Exist , Try Again with another email",
+      });
+    }
+
+    if (!password || typeof password !== "string" || password.length < 8) {
+      return res.status(400).json({
+        message: "Password must be a string and at least 8 characters long",
+      });
+    }
+
+    if (!termsAccepted) {
+      return res.status(400).json({
+        message: "You must accept the terms.",
+      });
+    }
+
+    const user = await userModel.create({
+      name,
+      email,
+      password: await bcrypt.hash(password, 10),
+      termsAccepted,
+      role: "admin",
+    });
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    res.cookie("authToken", token, {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      sameSite: "lax",
+    });
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    return res.status(201).json({
+      message: "Admin created successfully",
+      user: userResponse,
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const signupController = async (req, res) => {
   try {
     const { name, email, password, termsAccepted } = req.body;
@@ -105,6 +164,7 @@ const logoutController = (req, res) => {
 };
 
 module.exports = {
+  adminSignupController,
   signupController,
   loginController,
   logoutController,
