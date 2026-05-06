@@ -1,8 +1,29 @@
 import { useMutation } from "@tanstack/react-query";
 import { useStore } from "../../store";
-import { loginUser, logoutUser, signupUser } from "../../api/auth.api";
+import {
+  adminSignup,
+  loginUser,
+  logoutUser,
+  signupUser,
+} from "../../api/auth.api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+
+export const useAdminSignup = () => {
+  return useMutation({
+    mutationFn: adminSignup,
+    retry: false,
+    onSuccess: () => {
+      toast.success("Admin signup successful! Please login.");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Admin signup failed. Please try again.",
+      );
+    },
+  });
+};
 
 export const useSignup = () => {
   return useMutation({
