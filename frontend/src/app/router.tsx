@@ -11,6 +11,7 @@ import Blogs from "../pages/Blogs";
 import { ProtectedRoute } from "../routes/ProtectedRoute";
 import { PublicRoute } from "../routes/PublicRoute";
 import NotFound from "../pages/NotFound";
+import AdminSignup from "../pages/AdminSignup";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
+          { path: "admin-signup", element: <AdminSignup /> },
         ],
       },
 
