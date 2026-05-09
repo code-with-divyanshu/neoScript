@@ -1,3 +1,4 @@
+const userModel = require("../models/user.model");
 const imagekit = require("../services/storage.service");
 
 const getUserProfileController = (req, res) => {
