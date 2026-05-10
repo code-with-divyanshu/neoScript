@@ -4,6 +4,7 @@ const requireAuth = require("../middlewares/auth.middleware");
 const {
   getUserProfileController,
   updateUserRoleController,
+  changeUserPasswordController,
   getAllUsersProfileController,
   updateUserProfileController,
 } = require("../controllers/user.controller");
@@ -20,6 +21,7 @@ userRouter.put(
   upload.single("profilePicture"),
   updateUserProfileController,
 );
+userRouter.post("/change-password", requireAuth, changeUserPasswordController);
 
 userRouter.get(
   "/admin/users",

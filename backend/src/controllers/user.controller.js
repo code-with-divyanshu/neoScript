@@ -138,6 +138,7 @@ const updateUserRoleController = async (req, res) => {
 module.exports = {
   getUserProfileController,
   updateUserProfileController,
+  changeUserPasswordController,
   getAllUsersProfileController,
   updateUserRoleController,
 };
