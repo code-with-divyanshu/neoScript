@@ -75,9 +75,11 @@ export default function Navbar() {
                 Blogs
               </NavLink>
 
-              <NavLink to="/create-blog" className={navClass}>
-                Create Blogs
-              </NavLink>
+              {user?.role === "admin" || user?.role === "author" ? (
+                <NavLink to="/create-blog" className={navClass}>
+                  Create Blog
+                </NavLink>
+              ) : null}
             </>
           )}
         </nav>
