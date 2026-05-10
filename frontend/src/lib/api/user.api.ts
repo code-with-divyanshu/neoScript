@@ -11,3 +11,19 @@ export const updateUserProfile = async (payload: any) => {
     },
   });
 };
+
+export const changeUserPassword = async (payload: {
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}) => {
+  return api.post("/user/change-password", payload);
+};
+
+export const getAllUsers = async () => {
+  return api.get("/user/admin/users");
+};
+
+export const updateUserRole = async (userId: string, newRole: string) => {
+  return api.put(`/user/admin/users/${userId}/role`, { role: newRole });
+};
