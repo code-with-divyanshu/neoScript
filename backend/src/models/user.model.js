@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       maxLength: 200,
     },
     termsAccepted: { type: Boolean, default: false, required: true },
-    savedPosts: [
+    likedPosts: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Blog",

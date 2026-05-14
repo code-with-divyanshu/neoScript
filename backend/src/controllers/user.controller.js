@@ -1,5 +1,6 @@
 const userModel = require("../models/user.model");
 const imagekit = require("../services/storage.service");
+const bcrypt = require("bcryptjs");
 
 const getUserProfileController = (req, res) => {
   try {
@@ -135,10 +136,34 @@ const updateUserRoleController = async (req, res) => {
   }
 };
 
+const getLikedPostsController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id).populate({
+      path: "likedPosts",
+      populate: {
+        path: "author",
+        select: "name email profilePicture",
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      likedPosts: user.likedPosts,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getUserProfileController,
   updateUserProfileController,
   changeUserPasswordController,
   getAllUsersProfileController,
   updateUserRoleController,
+  getLikedPostsController,
 };
