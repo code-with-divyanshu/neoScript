@@ -7,6 +7,7 @@ const {
   changeUserPasswordController,
   getAllUsersProfileController,
   updateUserProfileController,
+  getLikedPostsController,
 } = require("../controllers/user.controller");
 const allowRoles = require("../middlewares/role.middleware");
 
@@ -22,6 +23,8 @@ userRouter.put(
   updateUserProfileController,
 );
 userRouter.post("/change-password", requireAuth, changeUserPasswordController);
+
+userRouter.get("/liked-posts", requireAuth, getLikedPostsController);
 
 userRouter.get(
   "/admin/users",
