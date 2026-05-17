@@ -8,6 +8,7 @@ const {
   getAllUsersProfileController,
   updateUserProfileController,
   getLikedPostsController,
+  getUserDashboardController,
 } = require("../controllers/user.controller");
 const allowRoles = require("../middlewares/role.middleware");
 
@@ -37,6 +38,13 @@ userRouter.put(
   requireAuth,
   allowRoles("admin"),
   updateUserRoleController,
+);
+
+userRouter.get(
+  "/dashboard",
+  requireAuth,
+  allowRoles("author", "admin"),
+  getUserDashboardController,
 );
 
 module.exports = userRouter;

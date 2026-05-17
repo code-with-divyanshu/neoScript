@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+const blogModel = require("../models/blog.model");
 const userModel = require("../models/user.model");
 const imagekit = require("../services/storage.service");
 const bcrypt = require("bcryptjs");
@@ -5,6 +7,10 @@ const bcrypt = require("bcryptjs");
 const getUserProfileController = (req, res) => {
   try {
     const user = req.user;
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     return res.status(200).json({
       message: "Profile fetched successfully",
@@ -159,6 +165,70 @@ const getLikedPostsController = async (req, res) => {
   }
 };
 
+const getUserDashboardController = async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user.id);
+
+    const [user, blogStats, recentBlogs] = await Promise.all([
+      userModel.findById(req.user.id).select("-password"),
+      blogModel.aggregate([
+        {
+          $match: {
+            author: userId,
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalBlogs: { $sum: 1 },
+            totalDrafts: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "draft"] }, 1, 0],
+              },
+            },
+            totalPublished: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "published"] }, 1, 0],
+              },
+            },
+            totalLikesReceived: {
+              $sum: {
+                $size: { $ifNull: ["$likes", []] },
+              },
+            },
+          },
+        },
+      ]),
+      blogModel
+        .find({ author: req.user.id })
+        .select("title slug status featureImage createdAt likes category")
+        .sort({ createdAt: -1 })
+        .limit(5),
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const stats = blogStats[0] || {
+      totalBlogs: 0,
+      totalDrafts: 0,
+      totalPublished: 0,
+      totalLikesReceived: 0,
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "Dashboard data fetched successfully",
+      user,
+      stats,
+      recentBlogs,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getUserProfileController,
   updateUserProfileController,
@@ -166,4 +236,5 @@ module.exports = {
   getAllUsersProfileController,
   updateUserRoleController,
   getLikedPostsController,
+  getUserDashboardController,
 };
