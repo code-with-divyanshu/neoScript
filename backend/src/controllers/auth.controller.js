@@ -6,8 +6,10 @@ const adminSignupController = async (req, res) => {
   try {
     const { name, email, password, termsAccepted } = req.body;
 
+    const normalizedEmail = email.toLowerCase();
+
     const existingEmail = await userModel.findOne({
-      email,
+      email: normalizedEmail,
     });
 
     if (existingEmail) {
@@ -30,7 +32,7 @@ const adminSignupController = async (req, res) => {
 
     const user = await userModel.create({
       name,
-      email,
+      email: normalizedEmail,
       password: await bcrypt.hash(password, 10),
       termsAccepted,
       role: "admin",
@@ -65,8 +67,10 @@ const signupController = async (req, res) => {
   try {
     const { name, email, password, termsAccepted } = req.body;
 
+    const normalizedEmail = email.toLowerCase();
+
     const existingEmail = await userModel.findOne({
-      email,
+      email: normalizedEmail,
     });
 
     if (existingEmail) {
@@ -87,7 +91,7 @@ const signupController = async (req, res) => {
 
     const user = await userModel.create({
       name,
-      email,
+      email: normalizedEmail,
       password: await bcrypt.hash(password, 10),
       termsAccepted,
     });
@@ -116,8 +120,10 @@ const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    const normalizedEmail = email.toLowerCase();
+
     const user = await userModel.findOne({
-      email,
+      email: normalizedEmail,
     });
 
     if (!user) {
