@@ -14,6 +14,8 @@ import NotFound from "../pages/NotFound";
 import AdminSignup from "../pages/AdminSignup";
 import { RoleRoute } from "../routes/RoleRoute";
 import AdminDashboard from "../pages/AdminDashboard";
+import BlogDetailsPage from "../pages/BlogDetailsPage";
+import EditBlogPage from "../pages/EditBlog";
 
 export const router = createBrowserRouter([
   {
@@ -39,13 +41,17 @@ export const router = createBrowserRouter([
         children: [
           { path: "dashboard", element: <Dashboard /> },
           { path: "blogs", element: <Blogs /> },
+          { path: "blog/:id", element: <BlogDetailsPage /> },
         ],
       },
 
       // Author and Admin routes
       {
         element: <RoleRoute allowedRoles={["author", "admin"]} />,
-        children: [{ path: "create-blog", element: <CreateBlog /> }],
+        children: [
+          { path: "create-blog", element: <CreateBlog /> },
+          { path: "blog/edit/:id", element: <EditBlogPage /> },
+        ],
       },
 
       //  Admin only
